@@ -17,8 +17,9 @@
 </template>
 
 <script lang="ts">
-  import { ElMessage } from 'element-plus'
   import { defineComponent, getCurrentInstance, onMounted, reactive } from 'vue'
+  import { successMsg, errorMsg } from '../../utils/tools'
+  import { ElMessageBox } from 'element-plus'
 
   export default defineComponent({
     name: 'CourseList',
@@ -39,34 +40,30 @@
       }
       // 删除数据
       async function remove(val: string) {
-        const res = await ctx.$http.delete(`courses/${val}`)
-        if (res.status == 200) {
-          successMsg()
-          fetch()
-        } else {
-          errorMsg()
-        }
+        ElMessageBox.confirm('确认删除 吗？', '删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(async () => {
+            const res = await ctx.$http.delete(`courses/${val}`)
+            if (res.status == 200) {
+              successMsg('删除成功')
+              fetch()
+            } else {
+              errorMsg('删除失败')
+            }
+          })
+          .catch(() => {
+            errorMsg('取消删除')
+          })
       }
 
       onMounted(() => {
         fetch()
       })
 
-      // 成功消息
-      const successMsg = () => {
-        ElMessage.success({
-          message: '删除成功',
-          type: 'success',
-        })
-      }
-      // 失败消息
-      const errorMsg = () => {
-        ElMessage.error({
-          message: '删除失败',
-          type: 'error',
-        })
-      }
-      return { state, fetch, fields, remove, successMsg, errorMsg }
+      return { state, fetch, fields, remove }
     },
   })
 </script>

@@ -18,7 +18,7 @@
 
 <script lang="ts">
   import { computed, defineComponent, getCurrentInstance, onMounted, reactive } from 'vue'
-  import { ElMessage } from 'element-plus'
+  import { successMsg, errorMsg } from '../../utils/tools'
   export default defineComponent({
     name: 'CourseEdit',
     props: {
@@ -39,36 +39,21 @@
       const submit = async () => {
         const res = await ctx.$http.post('/courses', state.data)
         if (res.status == 201) {
-          successMsg()
+          successMsg('添加成功')
           // 清空列表
           state.data = {}
           // 返回上一页 -> 视频列表页
           ctx.$router.go(-1)
         } else {
-          errorMsg()
+          errorMsg('添加失败')
         }
         console.log(res)
       }
-      // 成功消息
-      const successMsg = () => {
-        ElMessage.success({
-          message: '保存成功',
-          type: 'success',
-        })
-      }
-      // 失败消息
-      const errorMsg = () => {
-        ElMessage.error({
-          message: '保存失败',
-          type: 'error',
-        })
-      }
+
       return {
         state,
         isNew,
         submit,
-        successMsg,
-        errorMsg,
       }
     },
   })
