@@ -1,18 +1,19 @@
 <template>
   <div>
-    <h3>课程列表</h3>
-    <el-button size="small" type="primary" icon="el-icon-plus" @click="$router.push(`/courses/create`)">
+    <h3>标签列表</h3>
+    <el-button size="small" type="primary" icon="el-icon-plus" @click="$router.push(`/tags/create`)">
       添加
     </el-button>
     <el-table :data="state.data.data" style="width: 100%" border>
       <el-table-column v-for="(field, name) in fields" :key="field._id" :prop="name" :label="field.label"> </el-table-column>
       <el-table-column fixed="right" label="操作" :width="200">
         <template #default="{row}">
-          <el-button size="small" type="success" @click="$router.push(`/courses/edit/${row._id}`)">编辑</el-button>
+          <el-button size="small" type="success" @click="$router.push(`/tags/edit/${row._id}`)">编辑</el-button>
           <el-button size="small" type="danger" @click="remove(row._id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+
     <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="state.query.page" :page-sizes="[5, 10, 50]" :page-size="state.query.limit" layout="total, sizes, prev, pager, next, jumper" :total="state.data.total"> </el-pagination>
   </div>
 </template>
@@ -21,9 +22,8 @@
   import { defineComponent, getCurrentInstance, onMounted, reactive, watchEffect } from 'vue'
   import { successMsg, errorMsg } from '../../utils/tools'
   import { ElMessageBox } from 'element-plus'
-
   export default defineComponent({
-    name: 'CourseList',
+    name: 'TagList',
     setup() {
       const { ctx }: any = getCurrentInstance()
       const state = reactive({
@@ -34,21 +34,12 @@
           limit: 5,
         },
       })
+
       const fields = {
         _id: { label: 'ID' },
-        name: { label: '课程' },
-        cover: { label: '封面' },
+        tag: { label: '标签' },
       }
-      // 获取数据
-      async function fetch() {
-        const res = await ctx.$http.get('courses', {
-          params: {
-            query: state.query,
-          },
-        })
-        state.data = res.data
-      }
-      // 删除数据
+
       async function remove(val: string) {
         ElMessageBox.confirm('确认删除吗？', '删除', {
           confirmButtonText: '确定',
@@ -56,9 +47,9 @@
           type: 'warning',
         })
           .then(async () => {
-            const res = await ctx.$http.delete(`courses/${val}`)
+            const res = await ctx.$http.delete(`tags/${val}`)
             if (res.status == 200) {
-              successMsg(`${res.data.name}删除成功`)
+              successMsg(`${res.data.tag}删除成功`)
               fetch()
             } else {
               errorMsg('删除失败')
@@ -76,6 +67,14 @@
       async function handleCurrentChange(val: number) {
         state.query.page = val
       }
+      async function fetch() {
+        const res = await ctx.$http.get('tags', {
+          params: {
+            query: state.query,
+          },
+        })
+        state.data = res.data
+      }
       onMounted(() => {
         fetch()
         watchEffect(() => {
@@ -85,8 +84,8 @@
 
       return {
         state,
-        fetch,
         fields,
+        fetch,
         remove,
         handleSizeChange,
         handleCurrentChange,
