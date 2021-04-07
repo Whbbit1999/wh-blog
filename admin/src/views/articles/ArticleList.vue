@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h3>分类列表</h3>
-    <el-button size="small" type="primary" icon="el-icon-plus" @click="$router.push(`/categories/create`)">
+    <h3>文章列表</h3>
+    <el-button size="small" type="primary" icon="el-icon-plus" @click="$router.push(`/articles/create`)">
       添加
     </el-button>
     <el-table :data="state.data.data" style="width: 100%" border>
       <el-table-column v-for="(field, name) in fields" :key="field._id" :prop="name" :label="field.label"> </el-table-column>
       <el-table-column fixed="right" label="操作" :width="200">
         <template #default="{row}">
-          <el-button size="small" type="success" @click="$router.push(`/categories/edit/${row._id}`)">编辑</el-button>
+          <el-button size="small" type="success" @click="$router.push(`/articles/edit/${row._id}`)">编辑</el-button>
           <el-button size="small" type="danger" @click="remove(row._id)">删除</el-button>
         </template>
       </el-table-column>
@@ -37,11 +37,14 @@
 
       const fields = {
         _id: { label: 'ID' },
-        category: { label: '标签' },
+        title: { label: '文章标题' },
+        cover: { label: '文章缩略图' },
+        categorys: { label: '文章分类' },
+        tags: { label: '文章标签' },
       }
 
       async function fetch() {
-        const res = await ctx.$http.get('categories', {
+        const res = await ctx.$http.get('articles', {
           params: {
             query: state.query,
           },
@@ -55,7 +58,7 @@
           type: 'warning',
         })
           .then(async () => {
-            const res = await ctx.$http.delete(`categories/${val}`)
+            const res = await ctx.$http.delete(`articles/${val}`)
             if (res.status == 200) {
               successMsg(`${res.data.name}删除成功`)
               fetch()

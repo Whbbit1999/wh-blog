@@ -11,6 +11,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Home',
         component: () => import('../views/Home.vue'),
       },
+
       // 课程管理 -- 课程列表
       {
         path: '/courses/list',
@@ -25,6 +26,26 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
       },
       // 课程管理 -- 创建课程
+      {
+        path: '/courses/create',
+        name: 'CourseCreate',
+        component: () => import('../views/courses/CourseEdit.vue'),
+      },
+
+      // 课时管理 -- 课时列表
+      {
+        path: '/episodes/list',
+        name: 'EpisodeList',
+        component: () => import('../views/episodes/EpisodeList.vue'),
+      },
+      // 课时管理 -- 修改课时
+      {
+        path: '/episodes/edit/:id',
+        name: 'EpisodeEdit',
+        component: () => import('../views/episodes/EpisodeEdit.vue'),
+        props: true,
+      },
+      // 课时管理 -- 创建课时
       {
         path: '/courses/create',
         name: 'CourseCreate',
@@ -90,6 +111,9 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/articles/ArticleEdit.vue'),
         props: true,
       },
+
+      // 广告位管理
+      // 用户管理
     ],
   },
 ]

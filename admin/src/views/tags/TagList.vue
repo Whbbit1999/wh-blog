@@ -1,9 +1,11 @@
 <template>
   <div>
     <h3>标签列表</h3>
+
     <el-button size="small" type="primary" icon="el-icon-plus" @click="$router.push(`/tags/create`)">
       添加
     </el-button>
+
     <el-table :data="state.data.data" style="width: 100%" border>
       <el-table-column v-for="(field, name) in fields" :key="field._id" :prop="name" :label="field.label"> </el-table-column>
       <el-table-column fixed="right" label="操作" :width="200">
@@ -22,8 +24,10 @@
   import { defineComponent, getCurrentInstance, onMounted, reactive, watchEffect } from 'vue'
   import { successMsg, errorMsg } from '../../utils/tools'
   import { ElMessageBox } from 'element-plus'
+
   export default defineComponent({
     name: 'TagList',
+
     setup() {
       const { ctx }: any = getCurrentInstance()
       const state = reactive({
